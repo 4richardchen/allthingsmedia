@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: atm
+      MYSQL_DATABASE: users_db
+  www:
+    depends_on:
+      - db
+    volumes:
+      - ./php/:/var/www/html/
+    ports:
+      - "80:80"
+    stdin_open: true
+    tty: true
+    build: ./php/
